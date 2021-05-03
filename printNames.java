@@ -85,4 +85,55 @@ public class printNames {
         System.out.println(getRank(2014, "Noah", "M"));
         System.out.println(getRank(2014, "Mason", "M")); 
     }
+    
+    public String getName (int year, int rank, String gender) {
+        FileResource fr = new FileResource("/babyNames/data/yob" + year + "short.csv");
+        //Don't forget to specify there is no header row with "false" 
+        CSVParser parser = fr.getCSVParser(false); 
+        String nameFound = ""; 
+        int rankFound = 0; 
+        
+        for (CSVRecord rec : parser) {            
+            String genderFound = rec.get(1); 
+            
+            if (genderFound.equals(gender)) {
+                rankFound++;   
+                 
+                if (rankFound == rank) {                   
+                    nameFound = rec.get(0); 
+                    break; 
+                }
+            }            
+        }
+        
+        if (rankFound == 0) {
+            return "No Name";                 
+        }                
+        return nameFound; 
+    }
+    
+    public void testGetName() {
+        System.out.println(getName(2014, 3, "M")); 
+        System.out.println(getName(2012, 4, "M")); 
+        System.out.println(getName(2012, 1, "F")); 
+    }
+    
+    public void whatIsNameInYear (String name, int year, int  newYear, String gender) {
+             
+        int initialRank = getRank(year, name, gender);
+            
+        String equivName = getName(newYear, initialRank, gender); 
+        
+        System.out.println(name + " born in " + year + ", " 
+                            + "would be " + equivName + " if she was born in " + newYear); 
+        
+    }
+    
+    
+    public void testWhatIsNameInYear() {
+        whatIsNameInYear("Emma", 2014, 2012, "F");        
+    }
 }
+
+
+
