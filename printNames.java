@@ -50,11 +50,11 @@ public class printNames {
         totalBirths(fr);                 
     }
     
-    public int getRank (int year, String name, String gender) {
+    public int getRank (String name, String gender) {
         int rank = 0; 
         int position = 0; 
         //"E:\babyNames\data\example-small.csv"
-        FileResource fr = new FileResource("/babyNames/data/yob" + year + "short.csv"); 
+        FileResource fr = new FileResource(); 
         CSVParser parser = fr.getCSVParser(false); 
         for (CSVRecord rec : parser) {
              
@@ -78,12 +78,12 @@ public class printNames {
     }
     
     public void testGetRank() {
-        //FileResource fr = new FileResource(); 
-        System.out.println(getRank(2014, "Ava", "F")); 
-        System.out.println(getRank(2014, "William", "M")); 
-        System.out.println(getRank(2014, "Emma", "F")); 
-        System.out.println(getRank(2014, "Noah", "M"));
-        System.out.println(getRank(2014, "Mason", "M")); 
+       //FileResource fr = new FileResource(); 
+       //System.out.println(getRank(2014, "Ava", "F")); 
+       // System.out.println(getRank(2014, "William", "M")); 
+       System.out.println(getRank("Emma", "F")); 
+       //System.out.println(getRank(2014, "Noah", "M"));
+       System.out.println(getRank("Mason", "M")); 
     }
     
     public String getName (int year, int rank, String gender) {
@@ -118,6 +118,7 @@ public class printNames {
         System.out.println(getName(2012, 1, "F")); 
     }
     
+    /*
     public void whatIsNameInYear (String name, int year, int  newYear, String gender) {
              
         int initialRank = getRank(year, name, gender);
@@ -129,9 +130,75 @@ public class printNames {
         
     }
     
-    
+    */
+   
     public void testWhatIsNameInYear() {
-        whatIsNameInYear("Emma", 2014, 2012, "F");        
+        //whatIsNameInYear("Emma", 2014, 2012, "F");        
+    }
+    
+    public void yearOfHighestRank (String name, String gender) {
+        int currRank = 0; 
+        int highestRank = 0; 
+        File fileName = null; 
+        int yearWithRank = 0; 
+        
+        
+        DirectoryResource dr = new DirectoryResource(); 
+        for (File f : dr.selectedFiles()) {
+            String highestRankName = f.getName();  
+            String year = highestRankName.substring(3, 7); 
+            int yearInt = Integer.parseInt(year); 
+            
+            FileResource fr = new FileResource(f);  
+            CSVParser parser = fr.getCSVParser(false); 
+            for (CSVRecord currRow : parser) {
+            
+            String nameFound = currRow.get(0); 
+            String genderFound = currRow.get(1);
+            
+            if (genderFound.equals(gender)) { 
+                ++currRank;
+                
+                if (nameFound.equals(name)) {  
+                    currRank = currRank;   
+                    //System.out.println(currRank); 
+                    break;
+                    
+                }
+                break; 
+            }        
+                
+            } 
+            
+            if (currRank == 0) {
+                currRank = -1; 
+            }
+            
+            if (highestRank == 0) {
+                    highestRank = currRank;
+                    
+                } else {
+                    if (currRank < highestRank && currRank != -1) {
+                    highestRank = currRank;  
+                    yearWithRank = yearInt; 
+                }
+            
+            }
+        
+        
+         
+            System.out.println(yearInt); 
+        }    
+        
+        //return highestRank; 
+    }
+         
+
+
+    
+    public void testYearOfHighestRank() {
+       yearOfHighestRank("Emma", "F"); 
+                
     }
 }
 
